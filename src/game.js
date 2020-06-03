@@ -31,7 +31,7 @@ class Game {
 
     _move() {
         this._player.move()
-        this._house.isPlayerInside(this._player)
+        this._house.checkPlayerInside(this._player)
         this._checkCanvasMovement()
 
     }
