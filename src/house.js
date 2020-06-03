@@ -46,19 +46,26 @@ class House {
         }
 
         this.isPlayerInside = true
-
-        this.door = {
-            x: this.houseParts.leftWallUpper.x,
-            y: this.houseParts.leftWallUpper.y + this.houseParts.leftWallUpper.h,
-            w: this.houseParts.leftWallUpper.w,
-            h: (this.houseParts.leftWallUpper.y + this.houseParts.leftWallUpper.h) - this.houseParts.lefWallLower.y
+        
+        this.insideArea = {
+            x: this.houseParts.leftWallUpper.x + this.houseParts.leftWallUpper.w,
+            y: this.houseParts.upperWall.y + this.houseParts.upperWall.h,
+            w: this.houseParts.upperWall.w,
+            h: this.houseParts.rightWall.h - this.houseParts.upperWall.h - this.houseParts.lowerWall.h
         }
+
     }
 
     draw() {
+        
+        /*this._ctx.rect(this.insideArea.x,this.insideArea.y,this.insideArea.w,this.insideArea.h)
+        this._ctx.fillStyle = "yellow"
+        this._ctx.fill()
+
+        this._ctx.fillStyle = "black"*/
         for (const elements in this.houseParts) {
             if( elements === 'roof' && this.isPlayerInside)
-                return
+                continue
             this._ctx.fillRect(
                 this.houseParts[elements].x,
                 this.houseParts[elements].y,
@@ -66,5 +73,13 @@ class House {
                 this.houseParts[elements].h
             )
         }
+    }
+
+    checkPlayerInside(player)
+    {
+        const colX = player.x + player.w > this.insideArea.x && player.x < this.insideArea.x + this.insideArea.w
+        const colY = player.y + player.h > this.insideArea.y && player.y < this.insideArea.y + this.insideArea.h
+
+        this.isPlayerInside = colX && colY
     }
 }

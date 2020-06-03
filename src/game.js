@@ -31,7 +31,9 @@ class Game {
 
     _move() {
         this._player.move()
+        this._house.isPlayerInside(this._player)
         this._checkCanvasMovement()
+
     }
 
     _checkCanvasMovement() {
@@ -41,6 +43,11 @@ class Game {
     }
 
     _checkPlayerHouseCollisions() {
-        
+        const player = this._player;
+
+        for(const houseParts in this._house.houseParts)
+        {
+
+        }
     }
 }

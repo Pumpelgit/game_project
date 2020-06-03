@@ -5,8 +5,8 @@ class Player {
         this.x = this._ctx.canvas.width / 2
         this.y = this._ctx.canvas.height / 2
 
-        this._w = 25
-        this._h = 25
+        this.w = 25
+        this.h = 25
 
         this.vx = 0
         this.vy = 0
@@ -26,7 +26,7 @@ class Player {
     }
 
     draw() {
-        this._ctx.fillRect(this.x, this.y, this._w, this._h)
+        this._ctx.fillRect(this.x, this.y, this.w, this.h)
     }
 
     move() {
