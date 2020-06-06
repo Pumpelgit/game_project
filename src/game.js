@@ -15,6 +15,9 @@ class Game {
     this._textFood = new TextUI(this._ctx, this._player, 2)
 
     this._weather = new Weather(this._ctx, this._player)
+
+    this._canvasPosX = 0
+    this._canvasPosY = 0
   }
 
   start() {
@@ -56,16 +59,14 @@ class Game {
   }
 
   _draw() {
-    
     if (!this._player.insideHouse) {
-        
-        for (let i = 0; i < this._woodArray.length; i++) {
-            this._woodArray[i].draw()
-        }
-        
-        for (let i = 0; i < this._foodArray.length; i++) {
-            this._foodArray[i].draw()
-        }
+      for (let i = 0; i < this._woodArray.length; i++) {
+        this._woodArray[i].draw()
+      }
+
+      for (let i = 0; i < this._foodArray.length; i++) {
+        this._foodArray[i].draw()
+      }
 
       this._textWood.draw(this._resourceController.currentWood)
       this._textFood.draw(this._resourceController.currentFood)
@@ -73,14 +74,12 @@ class Game {
       this._house.drawRoof()
       this._player.draw()
       this._weather.draw()
-      
     } else {
-        this._house.drawOutsideBlack(this._player);        
-        this._house.draw()
-        this._player.draw()
+      this._house.drawOutsideBlack(this._player)
+      this._house.draw()
+      this._player.draw()
     }
-
-}
+  }
 
   _move() {
     this._checkPlayerHouseCollisions()
@@ -93,7 +92,9 @@ class Game {
   _checkCanvasMovement() {
     const player = this._player
 
-    this._ctx.translate(-player.vx, -player.vy)
+    this._canvasPosX = this._player.x - this._ctx.canvas.width / 2
+    this._canvasPosY = this._player.x - this._ctx.canvas.width / 2
+    this._ctx.translate(-player.x, -player.vy)
   }
 
   _checkResourcesCollision() {
