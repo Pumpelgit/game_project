@@ -30,6 +30,8 @@ class Player {
 
         this._setListeners()
 
+        this.insideHouse = true
+
     }
 
     draw() {
