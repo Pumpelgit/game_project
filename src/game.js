@@ -16,8 +16,8 @@ class Game {
 
     this._weather = new Weather(this._ctx, this._player)
 
-    this._canvasPosX = 0
-    this._canvasPosY = 0
+    this._canvasPosX = this._player.x
+    this._canvasPosY = this._player.y
   }
 
   start() {
@@ -91,10 +91,9 @@ class Game {
 
   _checkCanvasMovement() {
     const player = this._player
-
-    this._canvasPosX = this._player.x - this._ctx.canvas.width / 2
-    this._canvasPosY = this._player.x - this._ctx.canvas.width / 2
-    this._ctx.translate(-player.x, -player.vy)
+    this._ctx.translate(this._canvasPosX-player.x, this._canvasPosY-player.y)
+    this._canvasPosX = this._player.x
+    this._canvasPosY = this._player.y
   }
 
   _checkResourcesCollision() {
