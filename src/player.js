@@ -11,10 +11,17 @@ class Player {
         this.vx = 0
         this.vy = 0
 
-        this._horizontalSpeed = 3
-        this._verticalSpeed = 3
+        this._horizontalSpeed = 4
+        this._verticalSpeed = 4
 
         this.actions = {
+            up: false,
+            right: false,
+            down: false,
+            left: false
+        }
+
+        this.collisions = {
             up: false,
             right: false,
             down: false,
@@ -26,14 +33,18 @@ class Player {
     }
 
     draw() {
+        this._ctx.beginPath()
+        this._ctx.fillStyle = "red"
         this._ctx.fillRect(this.x, this.y, this.w, this.h)
+        this._ctx.closePath()
+        this._checkMapEdges()
     }
 
     move() {
         this._checkActions()
         this.x += this.vx
         this.y += this.vy
-
+        this._resetCollsions()
     }
 
     _setListeners() {
@@ -65,20 +76,60 @@ class Player {
 
     _checkActions() {
         
-        if (this.actions.up) {
+        //console.log(`action up ${this.actions.up} col up ${this.collisions.up}`)
+        //console.log(`action down ${this.actions.down} col down ${this.collisions.down}`)
+        //console.log(`action left ${this.actions.left} col left ${this.collisions.left}`)
+        //console.log(`action right ${this.actions.right} col right ${this.collisions.right}`)
+        
+        if (this.actions.up && !this.collisions.up) {
             this.vy = -this._verticalSpeed
-        } else if (this.actions.down) {
+        } else if (this.actions.down && !this.collisions.down) {
             this.vy = this._verticalSpeed
         } else {
             this.vy = 0
         }
 
-        if (this.actions.right) {
+        if (this.actions.right && !this.collisions.right) {
             this.vx = this._horizontalSpeed
-        } else if (this.actions.left) {
+        } else if (this.actions.left && !this.collisions.left) {
             this.vx = -this._horizontalSpeed
         } else {
             this.vx = 0
+        }
+    }
+
+    _resetCollsions() {
+        for (const elements in this.collisions) {
+            this.collisions[elements] = false
+        }
+    }
+
+    _checkMapEdges() {
+
+        this._ctx.beginPath();
+        this._ctx.moveTo(-(GAMEBOUNDSX / 2), -(GAMEBOUNDSY / 2));
+
+        this._ctx.lineTo( (GAMEBOUNDSX / 2), -(GAMEBOUNDSY / 2));
+        this._ctx.lineTo( (GAMEBOUNDSX / 2),  (GAMEBOUNDSY / 2));
+        this._ctx.lineTo(-(GAMEBOUNDSX / 2),  (GAMEBOUNDSY / 2));
+        this._ctx.lineTo(-(GAMEBOUNDSX / 2), -(GAMEBOUNDSY / 2));
+        this._ctx.stroke(); 
+        this._ctx.closePath();
+
+        if( this.x <= -(GAMEBOUNDSX / 2)) {
+            this.actions.left = false
+        }
+
+        if( this.x + this.w >= (GAMEBOUNDSX / 2)) {
+            this.actions.right = false
+        }
+
+        if( this.y <= -(GAMEBOUNDSY / 2)) {
+            this.actions.up = false
+        }
+
+        if( this.y + this.w >= (GAMEBOUNDSY / 2)) {
+            this.actions.down = false
         }
     }
 }

@@ -36,17 +36,17 @@ class House {
                 y: this._y + 140,
                 w: 130,
                 h: 20
-            },
-            roof: {
-                x: this._x,
-                y: this._y,
-                w: 170,
-                h: 160
-            }
+            }                      
         }
+        this.roof = {
+            x: this._x,
+            y: this._y,
+            w: 170,
+            h: 160
+        }  
 
         this.isPlayerInside = true
-        
+
         this.insideArea = {
             x: this.houseParts.leftWallUpper.x + this.houseParts.leftWallUpper.w,
             y: this.houseParts.upperWall.y + this.houseParts.upperWall.h,
@@ -57,20 +57,23 @@ class House {
     }
 
     draw() {
-        
-        /*this._ctx.rect(this.insideArea.x,this.insideArea.y,this.insideArea.w,this.insideArea.h)
-        this._ctx.fillStyle = "yellow"
-        this._ctx.fill()
-
-        this._ctx.fillStyle = "black"*/
+        this._ctx.beginPath()
+        this._ctx.fillStyle = "black"
         for (const elements in this.houseParts) {
-            if( elements === 'roof' && this.isPlayerInside)
-                continue
             this._ctx.fillRect(
                 this.houseParts[elements].x,
                 this.houseParts[elements].y,
                 this.houseParts[elements].w,
                 this.houseParts[elements].h
+            )
+        }
+        this._ctx.closePath()
+        if( !this.isPlayerInside){
+            this._ctx.fillRect(
+                this.roof.x,
+                this.roof.y,
+                this.roof.w,
+                this.roof.h
             )
         }
     }
@@ -82,4 +85,6 @@ class House {
 
         this.isPlayerInside = colX && colY
     }
+
+
 }
