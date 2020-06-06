@@ -11,7 +11,8 @@ class Game {
 
         this._resourceController = new ResourceController()
 
-
+        this._textWood = new TextUI(this._ctx,this._player,1)
+        this._textFood = new TextUI(this._ctx,this._player,2)
     }
 
     start() {
@@ -58,6 +59,9 @@ class Game {
         for (let i = 0; i < this._foodArray.length; i++) {
             this._foodArray[i].draw()
         }
+
+        this._textWood.draw(this._resourceController.currentWood)
+        this._textFood.draw(this._resourceController.currentFood)
     }
 
     _move() {
@@ -88,7 +92,7 @@ class Game {
         for (let i = 0; i < this._foodArray.length; i++) {
             this._foodArray[i].checkCollision(player)
             if (this._foodArray[i].checkCollision(player)) {
-                this._resourceController.addWood(this._foodArray[i].amount)
+                this._resourceController.addFood(this._foodArray[i].amount)
                 this._foodArray.splice(i,1)
             }
         }
