@@ -73,7 +73,7 @@ class Game {
 
       this._house.drawRoof()
       this._player.draw()
-      this._weather.draw()
+      //this._weather.draw()
     } else {
       this._house.drawOutsideBlack(this._player)
       this._house.draw()
