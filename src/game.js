@@ -116,7 +116,7 @@ class Game {
       this._weather.setWeaterValue(1)
     }
     this._world.draw()
-    this._timeAliveUI.draw()
+    this._timeAliveUI.draw(this._weather.getWeatherValue())
   }
 
   _move() {

@@ -54,4 +54,8 @@ class Weather {
       }
     })
   }
+
+  getWeatherValue() {
+    return this._currentWeatherValue
+  }
 }

@@ -14,9 +14,9 @@ class TimeAlive {
         this.startInterval()
     }
 
-    draw() {
+    draw(weatherValue) {
         let color = 'black'
-        if (this._player.insideHouse) {
+        if (this._player.insideHouse || weatherValue <= 0.5) {
             color = 'white'
         }
         

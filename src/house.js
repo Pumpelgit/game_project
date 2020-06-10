@@ -2,8 +2,8 @@ class House {
   constructor(ctx) {
     this._ctx = ctx
 
-    this._x = (this._ctx.canvas.width  / 2) - 50
-    this._y = (this._ctx.canvas.height / 2) - 50
+    this._x = this._ctx.canvas.width / 2 - 50
+    this._y = this._ctx.canvas.height / 2 - 50
 
     this.houseParts = {
       leftWallUpper: {
@@ -111,6 +111,11 @@ class House {
   }
 
   _drawChimney() {
+    if (this.chimney.drawValue <= 0) {
+      this.chimney.drawValue = 0
+      return
+    }
+
     this._ctx.beginPath()
     const gradient = this._ctx.createRadialGradient(
       this.chimney.x,
@@ -118,23 +123,14 @@ class House {
       0,
       this.chimney.x,
       this.chimney.y,
-      this.chimney.r 
+      this.chimney.r
     )
-
-    const randValue = this._randomiseChimneyAnimation()
-
-    if(this.chimney.drawValue <= 0) {
-        this.chimney.drawValue = 0
-    }
-
-    let finalValue = this.chimney.drawValue + randValue
-    if(finalValue >= 1) {
-      finalValue = 1
-    }
+   
+    const finalValue = this.chimney.drawValue + this._randomiseChimneyAnimation()
 
     gradient.addColorStop(0, "DarkOrange")
     gradient.addColorStop(0.35 * finalValue, "Gold")
-    gradient.addColorStop(finalValue, "transparent")
+    gradient.addColorStop(finalValue, "lightgrey")
     this._ctx.fillStyle = gradient
 
     this._ctx.arc(this.chimney.x, this.chimney.y, this.chimney.r, this.chimney.startAngle, this.chimney.endAngle)
@@ -143,11 +139,17 @@ class House {
   }
 
   _randomiseChimneyAnimation() {
-    return Math.random() * 0.1
+    const randValue = Math.random() * 0.1
+
+    if (this.chimney.drawValue + randValue >= 1) {
+      return 0
+    }
+
+    return randValue
   }
 
   setChimneyValue(value) {
-    this.chimney.drawValue = value
+    this.chimney.drawValue = value > 1 ? 1 : value
   }
 
   drawOutsideBlack(player) {
