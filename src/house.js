@@ -2,39 +2,57 @@ class House {
   constructor(ctx) {
     this._ctx = ctx
 
-    this._x = this._ctx.canvas.width / 2 - 50
-    this._y = this._ctx.canvas.height / 2 - 50
+    this._x = (this._ctx.canvas.width  / 2) - 50
+    this._y = (this._ctx.canvas.height / 2) - 50
 
     this.houseParts = {
       leftWallUpper: {
         x: this._x,
         y: this._y,
         w: 20,
-        h: 60,
+        h: 50,
+        color: "RosyBrown",
+        collidable: true,
       },
       lefWallLower: {
         x: this._x,
-        y: this._y + 100,
+        y: this._y + 110,
         w: 20,
-        h: 60,
+        h: 50,
+        color: "RosyBrown",
+        collidable: true,
       },
       upperWall: {
         x: this._x + 20,
         y: this._y,
         w: 130,
         h: 20,
+        color: "RosyBrown",
+        collidable: true,
       },
       rightWall: {
         x: this._x + 150,
         y: this._y,
         w: 20,
         h: 160,
+        color: "RosyBrown",
+        collidable: true,
       },
       lowerWall: {
         x: this._x + 20,
         y: this._y + 140,
         w: 130,
         h: 20,
+        color: "RosyBrown",
+        collidable: true,
+      },
+      foodBasket: {
+        x: this._x + 22,
+        y: this._y + 22,
+        w: 50,
+        h: 20,
+        color: "SaddleBrown",
+        collidable: false,
       },
     }
 
@@ -45,15 +63,23 @@ class House {
       h: 160,
     }
 
+    this.chimney = {
+      x: this._x + 150,
+      y: this._y + 80,
+      r: 70,
+      startAngle: Math.PI / 2,
+      endAngle: Math.PI * (3 / 2),
+      drawValue: 1,
+    }
+
     this.insideArea = {
       x: this.houseParts.leftWallUpper.x + this.houseParts.leftWallUpper.w,
       y: this.houseParts.upperWall.y + this.houseParts.upperWall.h,
       w: this.houseParts.upperWall.w,
-      h:
-        this.houseParts.rightWall.h -
-        this.houseParts.upperWall.h -
-        this.houseParts.lowerWall.h,
+      h: this.houseParts.rightWall.h - this.houseParts.upperWall.h - this.houseParts.lowerWall.h,
     }
+
+    this.onPlayerEnter = null
   }
 
   draw() {
@@ -62,17 +88,19 @@ class House {
     this._ctx.fillRect(this._x, this._y, 170, this.houseParts.rightWall.h)
     this._ctx.closePath()
 
-    this._ctx.beginPath()
-    this._ctx.fillStyle = "RosyBrown"
+    this._drawChimney()
+
     for (const elements in this.houseParts) {
+      this._ctx.beginPath()
+      this._ctx.fillStyle = this.houseParts[elements].color
       this._ctx.fillRect(
         this.houseParts[elements].x,
         this.houseParts[elements].y,
         this.houseParts[elements].w,
         this.houseParts[elements].h
       )
+      this._ctx.closePath()
     }
-    this._ctx.closePath()
   }
 
   drawRoof() {
@@ -80,7 +108,46 @@ class House {
     this._ctx.fillStyle = "SaddleBrown"
     this._ctx.fillRect(this.roof.x, this.roof.y, this.roof.w, this.roof.h)
     this._ctx.closePath()
+  }
 
+  _drawChimney() {
+    this._ctx.beginPath()
+    const gradient = this._ctx.createRadialGradient(
+      this.chimney.x,
+      this.chimney.y,
+      0,
+      this.chimney.x,
+      this.chimney.y,
+      this.chimney.r 
+    )
+
+    const randValue = this._randomiseChimneyAnimation()
+
+    if(this.chimney.drawValue <= 0) {
+        this.chimney.drawValue = 0
+    }
+
+    let finalValue = this.chimney.drawValue + randValue
+    if(finalValue >= 1) {
+      finalValue = 1
+    }
+
+    gradient.addColorStop(0, "DarkOrange")
+    gradient.addColorStop(0.35 * finalValue, "Gold")
+    gradient.addColorStop(finalValue, "transparent")
+    this._ctx.fillStyle = gradient
+
+    this._ctx.arc(this.chimney.x, this.chimney.y, this.chimney.r, this.chimney.startAngle, this.chimney.endAngle)
+    this._ctx.fill()
+    this._ctx.closePath()
+  }
+
+  _randomiseChimneyAnimation() {
+    return Math.random() * 0.1
+  }
+
+  setChimneyValue(value) {
+    this.chimney.drawValue = value
   }
 
   drawOutsideBlack(player) {
@@ -96,13 +163,14 @@ class House {
   }
 
   checkPlayerInside(player) {
-    const colX =
-      player.x + player.w > this.insideArea.x &&
-      player.x < this.insideArea.x + this.insideArea.w
-    const colY =
-      player.y + player.h > this.insideArea.y &&
-      player.y < this.insideArea.y + this.insideArea.h
+    const colX = player.x + player.w > this.insideArea.x && player.x < this.insideArea.x + this.insideArea.w
+    const colY = player.y + player.h > this.insideArea.y && player.y < this.insideArea.y + this.insideArea.h
 
+    //check if it comes from outside so it only fires once
+    if (!player.insideHouse && colX && colY) {
+      this.onPlayerEnter()
+      console.log("player enters house")
+    }
     player.insideHouse = colX && colY
   }
 }

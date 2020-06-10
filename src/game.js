@@ -11,13 +11,36 @@ class Game {
 
     this._resourceController = new ResourceController()
 
-    this._textWood = new TextUI(this._ctx, this._player, 1)
-    this._textFood = new TextUI(this._ctx, this._player, 2)
+    this._textWood = new TextUI(this._ctx, this._house.chimney, -10, 0, 12)
+
+    this._textFood = new TextUI(
+      this._ctx,
+      this._house.houseParts.foodBasket,
+      this._house.houseParts.foodBasket.w / 2,
+      this._house.houseParts.foodBasket.h / 2,
+      12
+    )
+
+    this._timeAliveUI = new TimeAlive(this._ctx,this._player)
 
     this._weather = new Weather(this._ctx, this._player)
 
     this._canvasPosX = this._player.x
     this._canvasPosY = this._player.y
+
+    this._world = new World(ctx)
+    this._gameover = null
+
+    this._house.onPlayerEnter = () => {
+      this._resourceController.storeResources()
+    }
+    this._gameFinished = false
+
+    this._weather.onWeatherValueZero = () => {
+      this._gameover = new GameOver(this._ctx, this._player,"You froze to death")
+      this._gameFinished = true
+      this._timeAliveUI.stopInterval()
+    }
   }
 
   start() {
@@ -44,8 +67,16 @@ class Game {
 
   _update() {
     this._clear()
-    this._draw()
-    this._move()
+    if (this._gameFinished) {
+
+      this._gameover.draw()
+      this._timeAliveUI.drawGameOver()
+
+    } else {
+
+      this._draw()
+      this._move()
+    }
   }
 
   _clear() {
@@ -67,33 +98,47 @@ class Game {
       for (let i = 0; i < this._foodArray.length; i++) {
         this._foodArray[i].draw()
       }
-
-      this._textWood.draw(this._resourceController.currentWood)
-      this._textFood.draw(this._resourceController.currentFood)
-
+      
       this._house.drawRoof()
       this._player.draw()
-      this._weather.draw()
     } else {
       this._house.drawOutsideBlack(this._player)
       this._house.draw()
+      this._textWood.draw(this._resourceController.currentWood)
+      this._textFood.draw(this._resourceController.currentFood)
       this._player.draw()
     }
+    
+    if (!this._player.insideHouse || this._resourceController.isStarvingOrFreezing()) {
+      this._weather.draw()
+      this._weather.updateWeatherValue()
+    } else {
+      this._weather.setWeaterValue(1)
+    }
+    this._world.draw()
+    this._timeAliveUI.draw()
   }
 
   _move() {
     this._checkPlayerHouseCollisions()
+    this._world.edgeCollision(this._player)
     this._player.move()
     this._checkResourcesCollision()
     this._house.checkPlayerInside(this._player)
     this._checkCanvasMovement()
+    this._checkResourcesCollected()
   }
 
   _checkCanvasMovement() {
     const player = this._player
-    this._ctx.translate(this._canvasPosX-player.x, this._canvasPosY-player.y)
+    this._ctx.translate(this._canvasPosX - player.x, this._canvasPosY - player.y)
     this._canvasPosX = this._player.x
     this._canvasPosY = this._player.y
+  }
+
+  _checkResourcesCollected() {
+    this._resourceController.decayResources()
+    this._house.setChimneyValue(this._resourceController.currentWood / MAXWOOD)
   }
 
   _checkResourcesCollision() {
@@ -120,32 +165,28 @@ class Game {
     const houseParts = this._house.houseParts
 
     for (const housePart in houseParts) {
+      if (!houseParts[housePart].collidable) {
+        continue
+      }
+
       const colX =
-        player.x + player.w >= houseParts[housePart].x &&
-        player.x <= houseParts[housePart].x + houseParts[housePart].w
+        player.x + player.w >= houseParts[housePart].x && player.x <= houseParts[housePart].x + houseParts[housePart].w
 
       const colY =
-        player.y + player.h >= houseParts[housePart].y &&
-        player.y <= houseParts[housePart].y + houseParts[housePart].h
+        player.y + player.h >= houseParts[housePart].y && player.y <= houseParts[housePart].y + houseParts[housePart].h
 
       if (colX && colY) {
-        const colHouseLeft =
-          player.x + player.w >= houseParts[housePart].x &&
-          player.x <= houseParts[housePart].x
+        const colHouseLeft = player.x + player.w >= houseParts[housePart].x && player.x <= houseParts[housePart].x
 
         const colHouseRight =
           player.x <= houseParts[housePart].x + houseParts[housePart].w &&
-          player.x + player.w >=
-            houseParts[housePart].x + houseParts[housePart].w
+          player.x + player.w >= houseParts[housePart].x + houseParts[housePart].w
 
-        const colHouseUp =
-          player.y + player.h >= houseParts[housePart].y &&
-          player.y <= houseParts[housePart].y
+        const colHouseUp = player.y + player.h >= houseParts[housePart].y && player.y <= houseParts[housePart].y
 
         const colHouseDown =
           player.y <= houseParts[housePart].y + houseParts[housePart].h &&
-          player.y + player.h >=
-            houseParts[housePart].y + houseParts[housePart].h
+          player.y + player.h >= houseParts[housePart].y + houseParts[housePart].h
 
         if (colHouseLeft && player.actions.right) {
           player.collisions.right = true

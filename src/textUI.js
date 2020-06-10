@@ -1,14 +1,18 @@
 class TextUI {
-    constructor(ctx, player, offsetY) {
+    constructor(ctx, anchorPoint, offsetX, offsetY, fontSize) {
         this._ctx = ctx
-        this._player = player
+        this._anchorPoint = anchorPoint
+        this._offsetX = offsetX
         this._offsetY = offsetY
-
-        
+        this._font = `${fontSize}px Arial`
         
     }
 
-    draw(amount) {
-        this._ctx.fillText(amount,this._player.x,this._player.y + this._player.h +(16 * this._offsetY))
+    draw(text,color = 'black') {
+        this._ctx.beginPath()
+        this._ctx.fillStyle = color
+        this._ctx.font = this._font
+        this._ctx.fillText(text,this._anchorPoint.x + this._offsetX,this._anchorPoint.y + this._offsetY)
+        this._ctx.closePath()
     }
 }
