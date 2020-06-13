@@ -17,7 +17,7 @@ class Trail {
   }
 
   draw() {
-    this._ctx.globalAlpha = 1 -  (this.ticksAlive / 180)
+    this._ctx.globalAlpha = 1 - (this.ticksAlive / 180)
     this._ctx.drawImage(this._img, this._x + this._offsetX, this._y + this._offsetY, this._w, this._h)
     this._ctx.globalAlpha = 1
   }
