@@ -32,9 +32,6 @@ class Food {
     const randomX = Math.round(Math.random() * GAMEBOUNDSX - GAMEBOUNDSX / 2)
     const randomY = Math.round(Math.random() * GAMEBOUNDSY - GAMEBOUNDSY / 2)
 
-    //const randomX = 480
-    //const randomY = 240
-
     const invalidSpawnZoneX = this._ctx.canvas.width / 2 - 50
     const invalidSpawnZoneY = this._ctx.canvas.height / 2 - 50
     const invalidSpawnZoneW = 170
@@ -42,12 +39,8 @@ class Food {
 
     const colX = randomX + this._r >= invalidSpawnZoneX && randomX - this._r <= invalidSpawnZoneX + invalidSpawnZoneW
     const colY = randomY + this._r >= invalidSpawnZoneY && randomY - this._r <= invalidSpawnZoneY + invalidSpawnZoneH
-
-
-    this._ctx.fillStyle = "yellow"
-    this._ctx.rect(invalidSpawnZoneX-2,invalidSpawnZoneY-2,invalidSpawnZoneW+2,invalidSpawnZoneH+2)
+    
     if (colX && colY) {
-      console.log("inside redo " + randomX + " " + randomY)
       return this._findSpawnPosition()
     }
     return { randomX, randomY }

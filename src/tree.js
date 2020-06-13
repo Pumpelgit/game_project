@@ -1,30 +1,36 @@
-class Wood {
+class Tree {
   constructor(ctx) {
     this._ctx = ctx
-
     this._x = this._findSpawnPosition().randomX
     this._y = this._findSpawnPosition().randomY
+    this._w = 100
+    this._h = 166 //1.66
 
-    this._w = 50
-    this._h = 20
+    this._img = new Image()
+    this._img.src = "./src/sprites/trees.png"
 
-    this.amount = 5
+    //this._frameW = this._img.width / 5
+    //this._frameH = this._img.height / 2
+
+    this._frameW = 133
+    this._frameH = 221
+
+    this._frameX = Math.floor(Math.random() * 10) * this._frameW
+    this._frameY = Math.floor(Math.random() * 2) * this._frameH
   }
 
   draw() {
-    this._ctx.beginPath()
-    this._ctx.fillStyle = "brown"
-    this._ctx.fillRect(this._x, this._y, this._w, this._h)
-    this._ctx.closePath()
-  }
-
-  checkCollision(player) {
-    const colX = player.x + player.w >= this._x && player.x < this._x + this._w
-    const colY = player.y + player.h >= this._y && player.y < this._y + this._h
-
-    if (colX && colY) {
-      return true
-    }
+    this._ctx.drawImage(
+      this._img,
+      this._frameX,
+      this._frameY,
+      this._frameW,
+      this._frameH,
+      this._x,
+      this._y,
+      this._w,
+      this._h
+    )
   }
 
   _findSpawnPosition() {

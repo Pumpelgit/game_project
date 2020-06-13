@@ -20,7 +20,7 @@ class Weather {
     this._x = this._player.x + this._player.w / 2
     this._y = this._player.y + this._player.h / 2
 
-    const gradient = this._ctx.createRadialGradient(this._x, this._y, 0, this._x, this._y, 600)
+    const gradient = this._ctx.createRadialGradient(this._x, this._y, 0, this._x, this._y, 400)
 
     if (this._currentWeatherValue < 0) {
       this._currentWeatherValue = 0

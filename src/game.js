@@ -2,12 +2,14 @@ class Game {
   constructor(ctx) {
     this._ctx = ctx
     this._intervalId = null
+    this._resourcesSpawnIntervalId = null
 
     this._player = new Player(ctx)
     this._house = new House(ctx)
 
     this._woodArray = []
     this._foodArray = []
+    this._treeArray = []
 
     this._resourceController = new ResourceController()
 
@@ -44,24 +46,43 @@ class Game {
   }
 
   start() {
-    this._spawnResources()
+    this._initializeResources()
     this._intervalId = setInterval(() => this._update(), 1000 / 60)
   }
 
-  _spawnResources() {
-    this._spawnWood()
-    this._spawnFood()
+  _initializeResources() {
+    for (let i = 0; i < WOODAMOUNT; i++) {
+      this._spawnWood()
+    }
+
+    for (let i = 0; i < FOODAMOUNT; i++) {
+      this._spawnFood()
+    }
+    this._resourcesSpawnIntervalId = setInterval(() => this._spawnResources(), 7000)
+    this._spawnTrees()
   }
 
-  _spawnWood() {
-    for (let i = 0; i < WOODAMOUNT; i++) {
-      this._woodArray.push(new Wood(this._ctx))
+  _spawnResources() {
+    if (this._woodArray.length< WOODAMOUNT) {
+      this._spawnWood()
+    }
+
+    if (this._foodArray.length< FOODAMOUNT) {
+      this._spawnFood()
     }
   }
 
+  _spawnWood() {
+      this._woodArray.push(new Wood(this._ctx))    
+  }
+
   _spawnFood() {
-    for (let i = 0; i < FOODAMOUNT; i++) {
-      this._foodArray.push(new Food(this._ctx))
+    this._foodArray.push(new Food(this._ctx))
+  }
+
+  _spawnTrees() {
+    for (let i = 0; i < TREES; i++) {
+      this._treeArray.push(new Tree(this._ctx))
     }
   }
 
@@ -90,7 +111,15 @@ class Game {
   }
 
   _draw() {
-    if (!this._player.insideHouse) {
+    if (this._player.insideHouse) {
+
+      this._house.drawOutsideBlack(this._player)
+      this._house.draw()
+      //this._textWood.draw(this._resourceController.currentWood)
+      //this._textFood.draw(this._resourceController.currentFood)
+      this._player.draw()
+    } else {
+
       for (let i = 0; i < this._woodArray.length; i++) {
         this._woodArray[i].draw()
       }
@@ -98,15 +127,13 @@ class Game {
       for (let i = 0; i < this._foodArray.length; i++) {
         this._foodArray[i].draw()
       }
+
       
       this._house.drawRoof()
       this._player.draw()
-    } else {
-      this._house.drawOutsideBlack(this._player)
-      this._house.draw()
-      this._textWood.draw(this._resourceController.currentWood)
-      this._textFood.draw(this._resourceController.currentFood)
-      this._player.draw()
+          for (let i = 0; i < this._treeArray.length; i++) {
+            this._treeArray[i].draw()
+          }
     }
     
     if (!this._player.insideHouse || this._resourceController.isStarvingOrFreezing()) {

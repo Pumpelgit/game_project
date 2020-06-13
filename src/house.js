@@ -56,6 +56,8 @@ class House {
       },
     }
 
+    this._roofImg = new Image()
+    this._roofImg.src = "./src/sprites/roof.png"
     this.roof = {
       x: this._x,
       y: this._y,
@@ -80,6 +82,8 @@ class House {
     }
 
     this.onPlayerEnter = null
+
+    this._smoke = new SmokeParticle(this._ctx, this.chimney.x, this.chimney.y)
   }
 
   draw() {
@@ -104,10 +108,15 @@ class House {
   }
 
   drawRoof() {
-    this._ctx.beginPath()
+    /*this._ctx.beginPath()
     this._ctx.fillStyle = "SaddleBrown"
     this._ctx.fillRect(this.roof.x, this.roof.y, this.roof.w, this.roof.h)
-    this._ctx.closePath()
+    this._ctx.closePath()*/
+    this._ctx.drawImage(this._roofImg, this.roof.x, this.roof.y, this.roof.w, this.roof.h)
+
+    if (this.chimney.drawValue > 0) {
+      this._smoke.draw()
+    }
   }
 
   _drawChimney() {
@@ -125,7 +134,7 @@ class House {
       this.chimney.y,
       this.chimney.r
     )
-   
+
     const finalValue = this.chimney.drawValue + this._randomiseChimneyAnimation()
 
     gradient.addColorStop(0, "DarkOrange")
@@ -137,6 +146,8 @@ class House {
     this._ctx.fill()
     this._ctx.closePath()
   }
+
+  _drawSmokeOutSide() {}
 
   _randomiseChimneyAnimation() {
     const randValue = Math.random() * 0.1

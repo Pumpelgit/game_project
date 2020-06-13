@@ -1,4 +1,13 @@
 canvas {
-    border-style: dotted;
-    border-width: 1px;
+    background-color: whitesmoke;
+    /*border-style: dotted;
+    border-width: 1px;*/
+
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
 }
