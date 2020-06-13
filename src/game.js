@@ -48,6 +48,7 @@ class Game {
   start() {
     this._initializeResources()
     this._intervalId = setInterval(() => this._update(), 1000 / 60)
+    audioController.playAudio('music')
   }
 
   _initializeResources() {
@@ -129,8 +130,8 @@ class Game {
       }
 
       
-      this._house.drawRoof()
       this._player.draw()
+      this._house.drawRoof()
           for (let i = 0; i < this._treeArray.length; i++) {
             this._treeArray[i].draw()
           }

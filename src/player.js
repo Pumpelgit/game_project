@@ -5,14 +5,14 @@ class Player {
     this.x = this._ctx.canvas.width / 2
     this.y = this._ctx.canvas.height / 2
 
-    this.w = 25
-    this.h = 25
+    this.w = 20
+    this.h = 20
 
     this.vx = 0
     this.vy = 0
 
-    this._horizontalSpeed = 4
-    this._verticalSpeed = 4
+    this._horizontalSpeed = 2
+    this._verticalSpeed = 2
 
     this.actions = {
       up: false,
@@ -31,13 +31,24 @@ class Player {
     this._setListeners()
 
     this.insideHouse = true
+
+    this._trailArray = []
+
+    this._ticks = 0
   }
 
   draw() {
+    this._trailLogic()
+    if (!this.insideHouse) {
+      for (let i = 0; i < this._trailArray.length; i++) {
+        this._trailArray[i].draw()
+      }
+    }
     this._ctx.beginPath()
-    this._ctx.fillStyle = "red"
+    this._ctx.fillStyle = "black"
     this._ctx.fillRect(this.x, this.y, this.w, this.h)
     this._ctx.closePath()
+
   }
 
   move() {
@@ -96,5 +107,21 @@ class Player {
     for (const elements in this.collisions) {
       this.collisions[elements] = false
     }
+  }
+
+  _trailLogic() {
+    if (!this.insideHouse) {
+      if (this._ticks++ > 2 && (this._vx != 0 || this._vy !=0)) {
+        if (this._trailArray.length < MAXTRAILSPRITES) {
+          this._trailArray.push(new Trail(this._ctx, this))
+        }       
+        this._ticks = 0
+      }
+    }
+    for (let i = 0; i < this._trailArray.length; i++) {
+      this._trailArray[i].ticksAlive++
+    }
+
+    this._trailArray = this._trailArray.filter((trail) => trail.ticksAlive <= 180)
   }
 }
