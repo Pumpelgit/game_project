@@ -11,6 +11,8 @@ class GameOver {
     )
 
     this._gameOverText = textToShow
+    audioController.fadeVolume('music',30)
+    audioController.playAudio('freeze')
   }
 
   draw() {

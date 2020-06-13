@@ -39,8 +39,11 @@ class Weather {
     )
   }
 
-  updateWeatherValue(finalValue) {
+  updateWeatherValue() {
     this._currentWeatherValue -= 0.05 / 100
+    const musicVolume = this._currentWeatherValue > 0.30 ? 1 : (this._currentWeatherValue / 0.30)
+    
+    audioController.setVolume('music',musicVolume)
   }
 
   setWeaterValue(value) {
