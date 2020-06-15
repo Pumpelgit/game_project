@@ -5,17 +5,17 @@ class Wood {
     this._x = this._findSpawnPosition().randomX
     this._y = this._findSpawnPosition().randomY
 
-    this._w = 50
+    this._w = 25
     this._h = 20
 
-    this.amount = 5
+    this._img = new Image()
+    this._img.src = "./src/sprites/log.png"
+
+    this.amount = 10
   }
 
   draw() {
-    this._ctx.beginPath()
-    this._ctx.fillStyle = "brown"
-    this._ctx.fillRect(this._x, this._y, this._w, this._h)
-    this._ctx.closePath()
+    this._ctx.drawImage(this._img, this._x, this._y, this._w, this._h)
   }
 
   checkCollision(player) {
@@ -23,6 +23,7 @@ class Wood {
     const colY = player.y + player.h >= this._y && player.y < this._y + this._h
 
     if (colX && colY) {
+      audioController.playAudio(`pickup${Math.floor(Math.random() * 3)}`, 0.5)
       return true
     }
   }

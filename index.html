@@ -5,13 +5,16 @@
     <meta name="viewport" content="width=device-width">
     <title>Alone Game</title>
     <link rel="stylesheet" href="./css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500&display=swap" rel="stylesheet"> 
   </head>
   <body>
 
+    <h1 id="title">Alone</h1>
+    <canvas id="canvas" width="800" height="800"></canvas> 
     <button id="start-game" class="btn">Start</button>
 
-    <canvas id="canvas" width="800" height="800">
     <script src="src/constants.js"></script>
+    <script src="src/freezingUI.js"></script>
     <script src="src/timealive.js"></script>
     <script src="src/world.js"></script>
     <script src="src/gameover.js"></script>
@@ -28,5 +31,6 @@
     <script src="src/game.js"></script>
     <script src="src/audiocontroller.js"></script>
     <script src="src/main.js"></script>
+
   </body>
 </html>

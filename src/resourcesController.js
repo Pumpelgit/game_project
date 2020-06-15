@@ -8,6 +8,14 @@ class ResourceController {
 
   }
 
+  resetResources() {
+    this.currentWood = 40
+    this.currentFood = 40
+
+    this.woodCarrying = 0
+    this.foodCarrying = 0
+  }
+
   addWood(amount) {
     this.currentWood += amount
   }

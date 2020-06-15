@@ -22,11 +22,6 @@ class Weather {
 
     const gradient = this._ctx.createRadialGradient(this._x, this._y, 0, this._x, this._y, 400)
 
-    if (this._currentWeatherValue < 0) {
-      this._currentWeatherValue = 0
-      this.onWeatherValueZero()
-    }
-
     gradient.addColorStop(0, "transparent")
     gradient.addColorStop(this._currentWeatherValue, "black")
     this._ctx.fillStyle = gradient
@@ -39,15 +34,31 @@ class Weather {
     )
   }
 
-  updateWeatherValue() {
-    this._currentWeatherValue -= 0.05 / 100
-    const musicVolume = this._currentWeatherValue > 0.30 ? 1 : (this._currentWeatherValue / 0.30)
-    
-    audioController.setVolume('music',musicVolume)
+  DecreaseWeatherValue() {
+    let newValue = this._currentWeatherValue - (0.025 / 100)
+    this._currentWeatherValue = newValue
+    if (this._currentWeatherValue < 0) {
+      this._currentWeatherValue = 0
+      this.onWeatherValueZero()
+    }
+    this._setMusicVolumeAccordingToWeather()
   }
 
-  setWeaterValue(value) {
-    this._currentWeatherValue = value
+  IncreaseWeatherValue() {
+    let newValue = this._currentWeatherValue + (0.35 / 100)
+    this._currentWeatherValue = newValue > 1 ? 1 : newValue  
+    this._setMusicVolumeAccordingToWeather()
+    
+  }
+
+  resetWeather() {
+    this._currentWeatherValue = 1
+  }
+
+  _setMusicVolumeAccordingToWeather() {
+    const musicVolume = this._currentWeatherValue > 0.3 ? 1 : (this._currentWeatherValue - 0.1) / 0.2
+
+    audioController.setVolume("music", musicVolume)
   }
 
   _setListeners() {

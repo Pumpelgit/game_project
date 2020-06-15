@@ -5,12 +5,12 @@ class AudioController {
     this._audioList = {
       music: "./src/sounds/An invisible force - Carlos Santafe.mp3",
       campfireloop: "./src/sounds/campfireloop.mp3",
-      door: "./src/sounds/doorclose.mp3",
+      door: "./src/sounds/doorclose.wav",
       freeze: "./src/sounds/freeze.mp3",
       lose: "./src/sounds/lose.mp3",
+      pickup0: "./src/sounds/pickup0.wav",
       pickup1: "./src/sounds/pickup1.wav",
       pickup2: "./src/sounds/pickup2.wav",
-      pickup3: "./src/sounds/pickup3.wav",
       uiclick: "./src/sounds/uiclick.wav",
     }
 
@@ -31,22 +31,25 @@ class AudioController {
     }
   }
 
-  playAudio(audioName) {
+  playAudio(audioName, volume = 1, loop = false) {
     const element = this._getAudio(audioName)
 
     element.audio.play()
+    element.audio.volume = volume
+    element.audio.loop = loop
   }
 
   stopAll() {
-    for (const element in this._audioArray) {
-      element.audio.pause()
+    for (let i = 0; i < this._audioArray.length; i++) {
+      this._audioArray[i].audio.currentTime = 0
+      this._audioArray[i].audio.pause()
     }
   }
 
   fadeVolume(audioName, time) {
     const element = this._getAudio(audioName)
     const fadeAudioIntervalId = setInterval(() => {
-      element.audio.volume -= 0.1
+      element.audio.volume = element.audio.volume - 0.1 < 0 ? 0 : element.audio.volume - 0.1
       if (element.audio.volume <= 0) {
         element.audio.pause()
         element.audio.volume = 1
@@ -57,7 +60,13 @@ class AudioController {
 
   setVolume(audioName, volume) {
     const element = this._getAudio(audioName)
-    element.audio.volume = volume
+    let temp_volume = volume
+    if( temp_volume < 0) {
+        temp_volume = 0
+    } else if (temp_volume > 1) {
+        temp_volume = 1
+    }
+    element.audio.volume = temp_volume
   }
 
   _getAudio(audioName) {

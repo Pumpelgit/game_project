@@ -5,6 +5,9 @@ class House {
     this._x = this._ctx.canvas.width / 2 - 50
     this._y = this._ctx.canvas.height / 2 - 50
 
+    this._foodBasketImg = new Image()
+    this._foodBasketImg.src = "./src/sprites/fruit.png"
+
     this.houseParts = {
       leftWallUpper: {
         x: this._x,
@@ -49,10 +52,11 @@ class House {
       foodBasket: {
         x: this._x + 22,
         y: this._y + 22,
-        w: 50,
+        w: 60,
         h: 20,
         color: "SaddleBrown",
         collidable: false,
+        value: 1,
       },
     }
 
@@ -105,6 +109,7 @@ class House {
       )
       this._ctx.closePath()
     }
+    this._drawFoodInBasket()
   }
 
   drawRoof() {
@@ -147,7 +152,12 @@ class House {
     this._ctx.closePath()
   }
 
-  _drawSmokeOutSide() {}
+  _drawFoodInBasket() {
+    const amountToDraw = Math.ceil((this.houseParts.foodBasket.value / 1) * 5)
+    for (let i = 0; i < amountToDraw; i++) {
+      this._ctx.drawImage(this._foodBasketImg, this.houseParts.foodBasket.x + 10 * i, this.houseParts.foodBasket.y ,15,15)
+    }
+  }
 
   _randomiseChimneyAnimation() {
     const randValue = Math.random() * 0.1
@@ -161,6 +171,10 @@ class House {
 
   setChimneyValue(value) {
     this.chimney.drawValue = value > 1 ? 1 : value
+  }
+
+  setFoodBasketValue(value) {
+    this.houseParts.foodBasket.value = value > 1 ? 1 : value
   }
 
   drawOutsideBlack(player) {
@@ -180,10 +194,23 @@ class House {
     const colY = player.y + player.h > this.insideArea.y && player.y < this.insideArea.y + this.insideArea.h
 
     //check if it comes from outside so it only fires once
-    if (!player.insideHouse && colX && colY) {
+    if (player.insideHouse == false && colX && colY) {
       this.onPlayerEnter()
-      console.log("player enters house")
+      audioController.playAudio("door")
+      if (this.chimney.drawValue > 0) {
+        audioController.playAudio("campfireloop", 1, true)
+      }
+    } else if (player.insideHouse == true && !(colX && colY)) {
+      audioController.playAudio("door")
+      if (this.chimney.drawValue > 0) {
+        audioController.fadeVolume("campfireloop", 0.1)
+      }
     }
+
     player.insideHouse = colX && colY
+
+    if (player.insideHouse && this.chimney.drawValue <= 0) {
+      audioController.setVolume("campfireloop", 0)
+    }
   }
 }

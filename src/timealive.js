@@ -11,7 +11,6 @@ class TimeAlive {
 
         this._intervalID = null
 
-        this.startInterval()
     }
 
     draw(weatherValue) {
@@ -25,6 +24,13 @@ class TimeAlive {
 
     drawGameOver() {
         this._timeAliveUI.draw(`You survived ${this.daysPassed} days and ${this.hoursPassed} hours.`,'white')
+    }
+
+    resetTimer() {
+        this.daysPassed = 0
+        this.hoursPassed = 0
+        this._timeAliveUI = new TextUI(this._ctx,this._player,-50,-(this._ctx.canvas.width / 3 ) + 60,16)
+        this.startInterval()
     }
 
     stopInterval() {

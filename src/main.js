@@ -4,7 +4,9 @@ const audioController = new AudioController()
 const game = new Game(ctx)
 
 function startGame() {
+
     game.start()
+
 }
 
 window.addEventListener('load', () => {

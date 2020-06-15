@@ -5,7 +5,7 @@ class GameOver {
     this._gameOverUI = new TextUI(
       this._ctx,
       this._player,
-      -100,
+      -80,
       0,
       24
     )

@@ -1,8 +1,12 @@
+* { 
+    font-family: 'Oswald', sans-serif;
+}
+
 canvas {
-    background-color: whitesmoke;
+    background-color: black;
     /*border-style: dotted;
     border-width: 1px;*/
-
+    /*background-color: whitesmoke;*/
 }
 
 body {
@@ -10,4 +14,20 @@ body {
     align-items: center;
     justify-content: center;
     background-color: black;
+}
+
+.btn {
+    position: absolute;
+    width: 150px;
+    height: 50px;
+    font-size: 36px;
+    margin-top: 200px;
+    padding-bottom: 60px;
+}
+
+h1 {
+    position: absolute;
+    color: whitesmoke;
+    margin-top: -200px;
+    font-size: 6em;
 }

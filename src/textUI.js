@@ -4,7 +4,7 @@ class TextUI {
         this._anchorPoint = anchorPoint
         this._offsetX = offsetX
         this._offsetY = offsetY
-        this._font = `${fontSize}px Arial`
+        this._font = `${fontSize}px Oswald`
         
     }
 

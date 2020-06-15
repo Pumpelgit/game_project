@@ -5,6 +5,9 @@ class Player {
     this.x = this._ctx.canvas.width / 2
     this.y = this._ctx.canvas.height / 2
 
+    this._originalX = this.x
+    this._originalY = this.y
+
     this.w = 20
     this.h = 20
 
@@ -56,6 +59,11 @@ class Player {
     this.x += this.vx
     this.y += this.vy
     this._resetCollsions()
+  }
+
+  resetPlayerPosition() {
+    this.x = this._originalX
+    this.y = this._originalY
   }
 
   _setListeners() {
